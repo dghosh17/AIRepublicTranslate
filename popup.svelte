@@ -1,11 +1,9 @@
-<!-- popup.svelte -->
 <script>
   import { onMount } from "svelte";
-  let inputText = "";          // Text entered by the user
-  let translation = "";         // Translated text to display
-  let targetLang = "Chinese";   // Default target language
+  let inputText = "";
+  let translation = "";
+  let targetLang = "Chinese";
 
-  // Function to handle translation
   function handleTranslate() {
     chrome.runtime.sendMessage(
       { type: "TRANSLATE_TEXT", text: inputText, targetLang },
@@ -19,7 +17,6 @@
     );
   }
 
-  // Function to toggle between English and Chinese
   function toggleLanguage() {
     targetLang = targetLang === "Chinese" ? "English" : "Chinese";
   }

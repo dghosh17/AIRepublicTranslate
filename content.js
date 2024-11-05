@@ -1,6 +1,6 @@
 document.addEventListener("mouseup", () => {
   const selectedText = window.getSelection().toString().trim();
-  
+
   if (selectedText) {
     const existingSidebar = document.querySelector("#translateSidebar");
     if (existingSidebar) existingSidebar.remove();
@@ -18,6 +18,15 @@ document.addEventListener("mouseup", () => {
       box-shadow: -2px 0px 5px rgba(0,0,0,0.1);
     `;
 
+    const translateButton = document.createElement("button");
+    translateButton.innerText = "Translate";
+    translateButton.onclick = () => {
+      chrome.runtime.sendMessage({ type: "TRANSLATE_TEXT", text: selectedText, targetLang: "Chinese" }, (response) => {
+        alert(response.translation || "No translation available.");
+      });
+    };
+
+    sidebar.appendChild(translateButton);
     document.body.appendChild(sidebar);
 
     // Load sidebar.js (the compiled Sidebar.svelte component)
