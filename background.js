@@ -1,29 +1,26 @@
-// background.js
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.type === "TRANSLATE_TEXT") {
     const { text, targetLang } = request;
-    const apiUrl = "http://localhost:11434";
-
-    // Define the prompt based on the target language
-    const prompt = targetLang === "Chinese"
-      ? `Translate this English text to Chinese: "${text}"`
-      : `Translate this Chinese text to English: "${text}"`;
+    const apiUrl = "http://localhost:11434/translate";
 
     const fetchOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "llama3.1", // Adjust to the model you're using
-        prompt: prompt,
-        max_tokens: 100
-      })
+      body: JSON.stringify({ text, targetLang })
     };
 
+    console.log("Sending request to local server with options:", fetchOptions);
+
     fetch(apiUrl, fetchOptions)
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Server responded with status: ${response.status}`);
+        }
+        return response.json();
+      })
       .then(data => {
-        const translation = data.choices && data.choices[0] ? data.choices[0].text.trim() : "Translation error: Invalid response structure.";
-        sendResponse({ translation });
+        console.log("Received data from local server:", data);
+        sendResponse({ translation: data.translation });
       })
       .catch(error => {
         console.error("Error in translation:", error);
