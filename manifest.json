@@ -4,22 +4,23 @@
     "version": "1.0",
     "permissions": ["activeTab", "scripting", "contextMenus"],
     "background": {
-        "service_worker": "background.js"
+      "service_worker": "background.js"
     },
     "action": {
-        "default_popup": "popup.svelte",
-        "default_icon": "icon.png"
+      "default_popup": "popup.html",  
+      "default_icon": "icon.png"
     },
     "content_scripts": [
-        {
-            "matches": ["<all_urls>"],
-            "js": ["content.js"]
-        }
+      {
+        "matches": ["<all_urls>"],
+        "js": ["content.js"]
+      }
     ],
     "web_accessible_resources": [
-        {
-            "resources": ["popup.html", "popup.js"],
-            "matches": ["<all_urls>"]
-        }
+      {
+        "resources": ["popup.html", "popup.js", "sidebar.html"],
+        "matches": ["<all_urls>"]
+      }
     ]
-}
+  }
+  

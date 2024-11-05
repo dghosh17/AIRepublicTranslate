@@ -16,11 +16,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         if (!response.ok) {
           throw new Error(`Server responded with status: ${response.status}`);
         }
+        console.log("Received raw response from server:", response);
         return response.json();
       })
       .then(data => {
-        console.log("Received data from local server:", data);
-        sendResponse({ translation: data.translation });
+        console.log("Parsed data from server:", data);
+        const translation = data.translation || "Error translating text.";
+        console.log("Translation text:", translation);
+        sendResponse({ translation });
       })
       .catch(error => {
         console.error("Error in translation:", error);
