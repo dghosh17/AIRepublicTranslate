@@ -31,12 +31,39 @@
       gap: 10px;
       padding: 10px;
     }
+    
     textarea {
       width: 100%;
       height: 80px;
+      resize: none;
+      padding: 8px;
+      font-size: 14px;
     }
-    button, select {
+    
+    button {
       margin-top: 5px;
+      padding: 8px 12px;
+      font-size: 14px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+    
+    button:hover {
+      background-color: #0056b3;
+    }
+    
+    h2 {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+    
+    p {
+      font-size: 14px;
+      color: #333;
     }
   </style>
   
