@@ -8,7 +8,11 @@
       chrome.runtime.sendMessage(
         { type: "TRANSLATE_TEXT", text: inputText, targetLang },
         (response) => {
-          translation = response.translation;
+          if (response && response.translation) {
+            translation = response.translation;
+          } else {
+            translation = "Error translating text.";
+          }
         }
       );
     }
@@ -31,7 +35,6 @@
       gap: 10px;
       padding: 10px;
     }
-    
     textarea {
       width: 100%;
       height: 80px;
@@ -39,7 +42,6 @@
       padding: 8px;
       font-size: 14px;
     }
-    
     button {
       margin-top: 5px;
       padding: 8px 12px;
@@ -51,16 +53,13 @@
       border-radius: 4px;
       transition: background-color 0.3s ease;
     }
-    
     button:hover {
       background-color: #0056b3;
     }
-    
     h2 {
       font-size: 18px;
       margin-bottom: 8px;
     }
-    
     p {
       font-size: 14px;
       color: #333;

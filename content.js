@@ -1,9 +1,13 @@
 document.addEventListener("mouseup", () => {
     const selectedText = window.getSelection().toString().trim();
+    
     if (selectedText) {
+      const existingButton = document.querySelector("#translateButton");
+      if (existingButton) existingButton.remove();
+  
       const rect = window.getSelection().getRangeAt(0).getBoundingClientRect();
       const translateButton = document.createElement("div");
-  
+      translateButton.id = "translateButton";
       translateButton.textContent = "Translate";
       translateButton.style = `
         position: absolute;
