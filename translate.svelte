@@ -28,7 +28,7 @@
   
         const data = await response.json();
         // Check for the translation result
-        translation = data.translation || "Error translating text."; // Adjust according to the response structure
+        translation = data.translation || "Error translating text."; 
       } catch (error) {
         console.error("Translation error:", error);
         translation = "Error translating text.";

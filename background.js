@@ -5,7 +5,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       const targetLang = request.targetLang; // Target language
       
       // Ollama API URL - assuming it listens on this port locally.
-      const apiUrl = "http://localhost:11434/translate"; 
+      const apiUrl = "http://localhost:11434"
   
       // Define the prompt based on target language
       const prompt = targetLang === "Chinese"
