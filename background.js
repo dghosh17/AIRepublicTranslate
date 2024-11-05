@@ -4,7 +4,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       const targetLang = request.targetLang; // Target language
   
       const apiUrl = "https://api.openai.com/v1/chat/completions";
-      const apiKey = "YOUR_SECURE_API_KEY"; // Replace with your API key securely
+      const apiKey = "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";
   
       // Construct the prompt for translation based on the target language
       const prompt =
