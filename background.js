@@ -13,7 +13,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "mistral:instruct", // Adjust to the model you're using
+        model: "llama3.1", // Adjust to the model you're using
         prompt: prompt,
         max_tokens: 100
       })
