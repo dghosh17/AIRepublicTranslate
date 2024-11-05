@@ -1,42 +1,28 @@
-// content.js
 document.addEventListener("mouseup", () => {
   const selectedText = window.getSelection().toString().trim();
   
   if (selectedText) {
-    const existingButton = document.querySelector("#translateButton");
-    if (existingButton) existingButton.remove();
+    const existingSidebar = document.querySelector("#translateSidebar");
+    if (existingSidebar) existingSidebar.remove();
 
-    const rect = window.getSelection().getRangeAt(0).getBoundingClientRect();
-    const translateButton = document.createElement("div");
-    translateButton.id = "translateButton";
-    translateButton.textContent = "Translate";
-    translateButton.style = `
-      position: absolute;
-      background: #0073e6;
-      color: white;
-      padding: 5px;
-      cursor: pointer;
-      z-index: 1000;
-      top: ${rect.top + window.scrollY}px;
-      left: ${rect.right + 10}px;
+    const sidebar = document.createElement("div");
+    sidebar.id = "translateSidebar";
+    sidebar.style = `
+      position: fixed;
+      right: 0;
+      top: 0;
+      width: 300px;
+      height: 100vh;
+      background-color: #f9f9f9;
+      z-index: 10000;
+      box-shadow: -2px 0px 5px rgba(0,0,0,0.1);
     `;
-    
-    document.body.appendChild(translateButton);
 
-    translateButton.addEventListener("click", () => {
-      chrome.runtime.sendMessage(
-        { type: "TRANSLATE_TEXT", text: selectedText, targetLang: "Chinese" },
-        (response) => {
-          if (response && response.translation) {
-            alert(`Translation: ${response.translation}`);
-          } else {
-            alert("Translation error.");
-          }
-          translateButton.remove();
-        }
-      );
-    });
+    document.body.appendChild(sidebar);
 
-    document.addEventListener("click", () => translateButton.remove(), { once: true });
+    // Load sidebar.js (the compiled Sidebar.svelte component)
+    const script = document.createElement('script');
+    script.src = chrome.runtime.getURL('sidebar.js');
+    document.body.appendChild(script);
   }
 });
