@@ -1,13 +1,23 @@
 {
   "name": "airepublictranslate",
   "version": "1.0.0",
-  "description": "",
+  "description": "A Chrome extension for translating selected text using AI Republic Translate.",
   "main": "background.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "build": "rollup -c"
   },
-  "keywords": [],
+  "keywords": ["chrome-extension", "translate", "svelte"],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "rollup": "^3.7.0",
+    "rollup-plugin-svelte": "^7.1.0",
+    "@rollup/plugin-commonjs": "^24.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.0",
+    "@rollup/plugin-terser": "^0.4.0",
+    "svelte": "^3.55.0"
+  },
+  "dependencies": {}
 }
