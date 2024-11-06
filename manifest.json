@@ -6,7 +6,7 @@
     "activeTab",
     "scripting",
     "contextMenus",
-    "http://localhost:11434/"
+    "http://localhost:11434"
   ],
   "background": {
     "service_worker": "background.js",
