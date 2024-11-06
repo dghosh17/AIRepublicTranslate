@@ -3,34 +3,29 @@ import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import css from 'rollup-plugin-css-only';
 
+const production = !process.env.ROLLUP_WATCH;
+
 export default {
-  input: 'src/popup.js',
+  input: 'popup.js', // Path to your main JS file
   output: {
     sourcemap: true,
     format: 'iife',
     name: 'app',
-    file: 'public/build/bundle.js'
+    file: 'bundle.js' // Output path
   },
   plugins: [
     svelte({
-      // enable run-time checks when not in production
-      dev: !production,
-      // extract CSS into a separate file (recommended).
-      css: css => {
-        css.write('public/build/bundle.css');
-      }
+      compilerOptions: {
+        dev: !production // Use "compilerOptions" for Svelte compiler configurations
+      },
+      emitCss: true // Ensure CSS is emitted separately
     }),
-    // If you have external dependencies installed from
-    // npm, you'll most likely need these plugins. In
-    // some cases you'll need additional configuration —
-    // consult the documentation for details:
-    // https://github.com/rollup/plugins/tree/master/packages/commonjs
     resolve({
       browser: true,
       dedupe: ['svelte']
     }),
     commonjs(),
-    css({ output: 'bundle.css' })
+    css({ output: 'bundle.css' }) // Use the rollup-plugin-css-only plugin to output CSS
   ],
   watch: {
     clearScreen: false
