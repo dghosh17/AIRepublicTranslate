@@ -46,9 +46,5 @@ document.addEventListener("mouseup", () => {
 
     sidebar.appendChild(translateButton);
     document.body.appendChild(sidebar);
-
-    const script = document.createElement('script');
-    script.src = chrome.runtime.getURL('sidebar.js');
-    document.body.appendChild(script);
   }
 });
