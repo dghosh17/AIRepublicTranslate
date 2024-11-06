@@ -1,22 +1,11 @@
 const express = require('express');
 const { exec } = require('child_process');
 const cors = require('cors');
-const path = require('path');
-
 const app = express();
 const port = 11434;
 
 app.use(express.json());
 app.use(cors());
-
-// Serve JavaScript files with correct MIME type
-app.use('/js', express.static(path.join(__dirname, 'path-to-js-files'), {
-  setHeaders: (res, path) => {
-    if (path.endsWith('.js')) {
-      res.setHeader('Content-Type', 'application/javascript');
-    }
-  }
-}));
 
 app.post('/translate', (req, res) => {
   const { text, targetLang } = req.body;
