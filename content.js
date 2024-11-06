@@ -1,59 +1,46 @@
 document.addEventListener("mouseup", () => {
   const selectedText = window.getSelection().toString().trim();
 
-  // Check if there is selected text
   if (selectedText) {
-    // Remove any existing sidebar to avoid duplicates
-    let existingSidebar = document.querySelector("#translateSidebar");
+    const existingSidebar = document.querySelector("#translateSidebar");
     if (existingSidebar) existingSidebar.remove();
 
-    // Create the sidebar for translation
     const sidebar = document.createElement("div");
     sidebar.id = "translateSidebar";
     sidebar.style = `
       position: fixed;
-      right: 0;
-      top: 0;
+      right: 10px;
+      top: 50px;
       width: 300px;
-      height: 100vh;
-      background-color: #f9f9f9;
+      padding: 15px;
+      background-color: #ffffff; /* White background */
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
       z-index: 10000;
-      box-shadow: -2px 0px 5px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+      border-left: 5px solid #007bff; /* Accent blue border */
     `;
 
-    // Create translate button
     const translateButton = document.createElement("button");
     translateButton.innerText = "Translate";
+    translateButton.style = `
+      background-color: #007bff;
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 15px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    `;
 
-    // Define the translate function
     translateButton.onclick = () => {
-      try {
-        chrome.runtime.sendMessage(
-          { type: "TRANSLATE_TEXT", text: selectedText, targetLang: "Chinese" },
-          (response) => {
-            if (chrome.runtime.lastError) {
-              console.error("Message error:", chrome.runtime.lastError.message);
-              alert("Translation error: Please try again.");
-              return;
-            }
-            alert(response.translation || "No translation available.");
-          }
-        );
-      } catch (error) {
-        console.error("Error during translation:", error);
-      }
+      chrome.runtime.sendMessage({ type: "TRANSLATE_TEXT", text: selectedText, targetLang: "Chinese" }, (response) => {
+        alert(response.translation || "No translation available.");
+      });
     };
 
     sidebar.appendChild(translateButton);
     document.body.appendChild(sidebar);
-
-    // Optional: Remove the sidebar if the user clicks outside it
-    const outsideClickListener = (event) => {
-      if (!sidebar.contains(event.target)) {
-        sidebar.remove();
-        document.removeEventListener("click", outsideClickListener);
-      }
-    };
-    document.addEventListener("click", outsideClickListener);
   }
 });
