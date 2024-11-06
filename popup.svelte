@@ -1,38 +1,23 @@
 <script>
   import { onMount } from "svelte";
-  let inputText = "";          // Text entered by the user
-  let translation = "";         // Translated text to display
+
+  let inputText = "";          // User input text
+  let translation = "";         // Translated text display
   let targetLang = "Chinese";   // Default target language
 
-  // Function to handle translation
   function handleTranslate() {
     chrome.runtime.sendMessage(
       { type: "TRANSLATE_TEXT", text: inputText, targetLang },
-      (response) => {
-        if (response && response.translation) {
-          translation = response.translation;
-        } else {
-          translation = "Error translating text.";
-        }
+      response => {
+        translation = response.translation || "Error translating text.";
       }
     );
   }
 
-  // Function to toggle between English and Chinese
   function toggleLanguage() {
     targetLang = targetLang === "Chinese" ? "English" : "Chinese";
   }
 </script>
-
-<main>
-  <h2>AI Republic Translate</h2>
-  <textarea bind:value={inputText} placeholder="Enter text to translate"></textarea>
-  <button on:click={handleTranslate}>Translate to {targetLang}</button>
-  <button on:click={toggleLanguage}>
-    Switch to {targetLang === "Chinese" ? "English" : "Chinese"}
-  </button>
-  <p>Translation: {translation}</p>
-</main>
 
 <style>
   main {
@@ -76,3 +61,13 @@
     color: #333;
   }
 </style>
+
+<main>
+  <h2>AI Republic Translate</h2>
+  <textarea bind:value={inputText} placeholder="Enter text to translate"></textarea>
+  <button on:click={handleTranslate}>Translate to {targetLang}</button>
+  <button on:click={toggleLanguage}>
+    Switch to {targetLang === "Chinese" ? "English" : "Chinese"}
+  </button>
+  <p><strong>Translation:</strong> {translation}</p>
+</main>
