@@ -14,8 +14,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     fetch(apiUrl, fetchOptions)
       .then(response => {
         if (!response.ok) {
-          console.error(`Server error: ${response.status} - ${response.statusText}`);
-          throw new Error(`Server error: ${response.status} - ${response.statusText}`);
+          throw new Error(`Server responded with status: ${response.status}`);
         }
         return response.json();
       })
@@ -24,7 +23,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         sendResponse({ translation });
       })
       .catch(error => {
-        console.error("Translation error:", error);
+        console.error("Error in translation:", error);
         sendResponse({ translation: "Error translating text." });
       });
 

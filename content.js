@@ -1,46 +1,98 @@
-document.addEventListener("mouseup", () => {
-  const selectedText = window.getSelection().toString().trim();
+function showTranslationSidebar(selectedText) {
+  const existingSidebar = document.querySelector("#translateSidebar");
+  if (existingSidebar) existingSidebar.remove();
 
-  if (selectedText) {
-    const existingSidebar = document.querySelector("#translateSidebar");
-    if (existingSidebar) existingSidebar.remove();
+  // Create the sidebar
+  const sidebar = document.createElement("div");
+  sidebar.id = "translateSidebar";
+  sidebar.style = `
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 320px;
+    height: 100vh;
+    background-color: #f5f5f7;
+    color: #333;
+    z-index: 10000;
+    box-shadow: -3px 0px 5px rgba(0, 0, 0, 0.15);
+    padding: 24px;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  `;
 
-    const sidebar = document.createElement("div");
-    sidebar.id = "translateSidebar";
-    sidebar.style = `
-      position: fixed;
-      right: 10px;
-      top: 50px;
-      width: 300px;
-      padding: 15px;
-      background-color: #ffffff; /* White background */
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-      z-index: 10000;
-      transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-      border-left: 5px solid #007bff; /* Accent blue border */
-    `;
+  // Header text
+  const header = document.createElement("h2");
+  header.innerText = "Translate Text";
+  header.style = `
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+  `;
 
-    const translateButton = document.createElement("button");
-    translateButton.innerText = "Translate";
-    translateButton.style = `
-      background-color: #007bff;
-      color: #ffffff;
-      border: none;
-      border-radius: 6px;
-      padding: 10px 15px;
-      cursor: pointer;
-      transition: background-color 0.3s, transform 0.2s;
-      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-    `;
+  // Selected text display
+  const selectedTextDisplay = document.createElement("p");
+  selectedTextDisplay.innerText = `"${selectedText}"`;
+  selectedTextDisplay.style = `
+    font-size: 16px;
+    color: #666;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.1);
+  `;
 
-    translateButton.onclick = () => {
-      chrome.runtime.sendMessage({ type: "TRANSLATE_TEXT", text: selectedText, targetLang: "Chinese" }, (response) => {
-        alert(response.translation || "No translation available.");
-      });
-    };
+  // Translate button
+  const translateButton = document.createElement("button");
+  translateButton.innerText = "Translate to Chinese";
+  translateButton.style = `
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    background-color: #4A90E2;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+  `;
+  translateButton.onmouseenter = () => {
+    translateButton.style.backgroundColor = "#357ABD";
+  };
+  translateButton.onmouseleave = () => {
+    translateButton.style.backgroundColor = "#4A90E2";
+  };
+  translateButton.onclick = () => {
+    chrome.runtime.sendMessage(
+      { type: "TRANSLATE_TEXT", text: selectedText, targetLang: "Chinese" },
+      (response) => {
+        const translation = response.translation || "No translation available.";
+        translationDisplay.innerText = translation;
+      }
+    );
+  };
 
-    sidebar.appendChild(translateButton);
-    document.body.appendChild(sidebar);
-  }
-});
+  // Translation display area
+  const translationDisplay = document.createElement("p");
+  translationDisplay.innerText = "Translation will appear here.";
+  translationDisplay.style = `
+    font-size: 16px;
+    color: #333;
+    background-color: #e8f0fe;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.1);
+  `;
+
+  // Append elements to the sidebar
+  sidebar.appendChild(header);
+  sidebar.appendChild(selectedTextDisplay);
+  sidebar.appendChild(translateButton);
+  sidebar.appendChild(translationDisplay);
+
+  // Append sidebar to the document
+  document.body.appendChild(sidebar);
+}

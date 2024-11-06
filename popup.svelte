@@ -1,9 +1,10 @@
 <script>
   import { onMount } from "svelte";
-  let inputText = "";
-  let translation = "";
-  let targetLang = "Chinese";
+  let inputText = "";          // Text entered by the user
+  let translation = "";         // Translated text to display
+  let targetLang = "Chinese";   // Default target language
 
+  // Function to handle translation
   function handleTranslate() {
     chrome.runtime.sendMessage(
       { type: "TRANSLATE_TEXT", text: inputText, targetLang },
@@ -17,6 +18,7 @@
     );
   }
 
+  // Function to toggle between English and Chinese
   function toggleLanguage() {
     targetLang = targetLang === "Chinese" ? "English" : "Chinese";
   }
@@ -37,31 +39,21 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding: 15px;
-    background-color: #f0f4f8; /* Sleek white/blue blend */
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    font-family: Arial, sans-serif;
   }
 
   textarea {
     width: 100%;
-    height: 100px;
-    padding: 10px;
+    height: 80px;
+    padding: 8px;
     font-size: 14px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
     resize: none;
-    outline: none;
-    transition: border 0.3s;
-  }
-
-  textarea:focus {
-    border: 1px solid #007bff;
   }
 
   button {
-    padding: 10px 15px;
-    font-size: 15px;
+    padding: 8px 12px;
+    font-size: 14px;
     background-color: #007bff;
     color: #fff;
     border: none;
@@ -74,18 +66,13 @@
     background-color: #0056b3;
   }
 
-  button:active {
-    background-color: #004494;
-  }
-
   h2 {
-    font-size: 20px;
-    color: #333;
+    font-size: 18px;
+    margin-bottom: 8px;
   }
 
   p {
-    font-size: 15px;
+    font-size: 14px;
     color: #333;
-    word-wrap: break-word;
   }
 </style>
