@@ -17,9 +17,10 @@
     }
   ],
   "web_accessible_resources": [
-    {
-      "resources": ["sidebar.js", "popup.html", "popup.js", "popup.svelte"],
-      "matches": ["<all_urls>"]
-    }
-  ]
+  {
+    "resources": ["sidebar.js", "style.css", "popup.html", "popup.js", "popup.svelte"],
+    "matches": ["<all_urls>"]
+  }
+]
+
 }
