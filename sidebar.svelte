@@ -1,13 +1,14 @@
 <script>
     export let selectedText = "";  // Text to translate
     let translation = "";          // Translation result
-    let targetLang = "Chinese";    // Default language for translation
+    let targetLang = "Chinese";    // Default target language
   
     function handleTranslate() {
       chrome.runtime.sendMessage(
         { type: "TRANSLATE_TEXT", text: selectedText, targetLang },
         response => {
           translation = response.translation || "Error translating text.";
+          console.log("Translation response:", response); // Debugging log
         }
       );
     }

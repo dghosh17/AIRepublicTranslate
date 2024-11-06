@@ -1,15 +1,14 @@
 <script>
-  import { onMount } from "svelte";
-
-  let inputText = "";          // User input text
-  let translation = "";         // Translated text display
-  let targetLang = "Chinese";   // Default target language
+  let inputText = "";  // User input text
+  let translation = ""; // Translated text display
+  let targetLang = "Chinese"; // Default translation language
 
   function handleTranslate() {
     chrome.runtime.sendMessage(
       { type: "TRANSLATE_TEXT", text: inputText, targetLang },
       response => {
         translation = response.translation || "Error translating text.";
+        console.log("Popup translation response:", response); // Debugging log
       }
     );
   }
@@ -66,8 +65,6 @@
   <h2>AI Republic Translate</h2>
   <textarea bind:value={inputText} placeholder="Enter text to translate"></textarea>
   <button on:click={handleTranslate}>Translate to {targetLang}</button>
-  <button on:click={toggleLanguage}>
-    Switch to {targetLang === "Chinese" ? "English" : "Chinese"}
-  </button>
+  <button on:click={toggleLanguage}>Switch to {targetLang === "Chinese" ? "English" : "Chinese"}</button>
   <p><strong>Translation:</strong> {translation}</p>
 </main>
