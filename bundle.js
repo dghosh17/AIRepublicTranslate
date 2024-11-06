@@ -124,10 +124,10 @@ var app = (function () {
 		anchor.before(/** @type {Node} */ (dom));
 	}
 
-	var root = template(`<main class="svelte-w5t65j"><h1 class="svelte-w5t65j"></h1></main>`);
+	var root = template(`<main><h1></h1></main>`);
 
 	function Popup($$anchor) {
-		let message = "Hello, Svelte!";
+		let message = "Hello, this is a test!";
 		var main = root();
 		var h1 = child(main);
 
@@ -135,11 +135,12 @@ var app = (function () {
 		append($$anchor, main);
 	}
 
+	// popup.js
+
 	const app = new Popup({
-	  target: document.getElementById('svelte-root') // Ensure this matches the id in your HTML
+	  target: document.getElementById('svelte-root')
 	});
 
 	return app;
 
 })();
-//# sourceMappingURL=bundle.js.map
