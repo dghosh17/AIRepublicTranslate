@@ -12,6 +12,7 @@
 </main>
 
 <style>
+  /* Debugging styles */
   main {
     padding: 20px;
     font-family: Arial, sans-serif;
@@ -34,5 +35,29 @@
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
+  }
+
+  button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: #0056b3;
+  }
+
+  h2 {
+    font-size: 16px;
+    color: #333;
+    margin: 10px 0 5px;
+  }
+
+  p {
+    font-size: 14px;
+    color: #555;
   }
 </style>
