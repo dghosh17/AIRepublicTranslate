@@ -3,20 +3,30 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     const { text, targetLang } = request;
     const apiUrl = "http://localhost:11434/translate";
 
-    fetch(apiUrl, {
+    const fetchOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text, targetLang })
-    })
-    .then(response => {
-      if (!response.ok) throw new Error(`Server error: ${response.status}`);
-      return response.json();
-    })
-    .then(data => sendResponse({ translation: data.translation }))
-    .catch(error => {
-      console.error("Translation error:", error);
-      sendResponse({ translation: "Error translating text." });
-    });
+    };
+
+    console.log("Sending request to local server with options:", fetchOptions);
+
+    fetch(apiUrl, fetchOptions)
+      .then(response => {
+        if (!response.ok) {
+          console.error(`Server error: ${response.status} - ${response.statusText}`);
+          throw new Error(`Server error: ${response.status} - ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        const translation = data.translation || "Error translating text.";
+        sendResponse({ translation });
+      })
+      .catch(error => {
+        console.error("Translation error:", error);
+        sendResponse({ translation: "Error translating text." });
+      });
 
     return true; // Keeps the message channel open for async response
   }

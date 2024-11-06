@@ -2,9 +2,15 @@
   "manifest_version": 3,
   "name": "AI Republic Translate",
   "version": "1.0",
-  "permissions": ["activeTab", "scripting", "contextMenus"],
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "contextMenus",
+    "http://localhost:11434/"
+  ],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "type": "module"
   },
   "action": {
     "default_popup": "popup.html",
@@ -18,7 +24,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["popup.js", "bundle.css"],
+      "resources": ["sidebar.js", "popup.html", "popup.js", "popup.svelte"],
       "matches": ["<all_urls>"]
     }
   ]

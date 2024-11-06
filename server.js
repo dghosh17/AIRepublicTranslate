@@ -7,13 +7,22 @@ const port = 11434;
 app.use(express.json());
 app.use(cors());
 
+// Serve static files with correct MIME type
+app.use('/js', express.static('path-to-js-directory', {
+  setHeaders: (res, path) => {
+    if (path.endsWith('.js')) {
+      res.setHeader('Content-Type', 'application/javascript');
+    }
+  }
+}));
+
 app.post('/translate', (req, res) => {
   const { text, targetLang } = req.body;
   const prompt = targetLang === "Chinese"
     ? `Translate this English text to Chinese: "${text}"`
     : `Translate this Chinese text to English: "${text}"`;
 
-  const command = `ollama generate llama3 --prompt "${prompt}"`;
+  const command = `ollama generate llama3.1 --prompt "${prompt}"`;
 
   exec(command, (error, stdout, stderr) => {
     if (error) {
