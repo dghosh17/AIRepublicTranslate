@@ -1,7 +1,8 @@
+// popup.js
 import App from './popup.svelte';
 
 const app = new App({
-  target: document.getElementById('svelte-root') // Ensure this matches the id in your HTML
+  target: document.getElementById('svelte-root')
 });
 
 export default app;

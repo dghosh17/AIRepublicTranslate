@@ -34,28 +34,5 @@ document.addEventListener("mouseup", () => {
     script.src = chrome.runtime.getURL('sidebar.js');
     document.body.appendChild(script);
   }
-  sidebar.style = `
-  position: fixed;
-  right: 10px;
-  top: 10px;
-  width: 250px;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-  padding: 16px;
-  z-index: 10000;
-`;
-translateButton.style = `
-background-color: #007bff;
-color: #fff;
-padding: 8px 12px;
-border: none;
-border-radius: 4px;
-font-size: 14px;
-cursor: pointer;
-transition: background-color 0.3s ease;
-`;
-
-
 
 });
