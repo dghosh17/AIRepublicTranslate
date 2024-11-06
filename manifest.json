@@ -18,7 +18,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["sidebar.js", "popup.html", "popup.js", "popup.svelte"],
+      "resources": ["popup.js", "bundle.css"],
       "matches": ["<all_urls>"]
     }
   ]

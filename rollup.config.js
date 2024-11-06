@@ -1,20 +1,24 @@
-// rollup.config.js
 import svelte from 'rollup-plugin-svelte';
-import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+import css from 'rollup-plugin-css-only';
 
 export default {
-  input: 'popup.js', // entry point
+  input: 'popup.js', // Your main Svelte entry file
   output: {
-    format: 'iife',  // immediately invoked function expression, suitable for browsers
-    name: 'app',
-    file: 'bundle.js',
+    file: 'popup.js', // Output to the same file name for compatibility
+    format: 'iife',   // Use an immediately-invoked function expression (IIFE)
+    name: 'popup'
   },
   plugins: [
-    svelte(),
+    svelte({
+      // Enable run-time checks when not in production
+      dev: !production,
+    }),
+    css({ output: 'bundle.css' }),
     resolve({
-      browser: true, // resolves modules for the browser
-      dedupe: ['svelte'] // prevents multiple copies of Svelte library
+      browser: true,
+      dedupe: ['svelte']
     }),
     commonjs()
   ]
