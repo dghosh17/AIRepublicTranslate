@@ -5,8 +5,7 @@
   "permissions": [
     "activeTab",
     "scripting",
-    "contextMenus",
-    "http://localhost:11434"
+    "contextMenus"
   ],
   "background": {
     "service_worker": "background.js",
