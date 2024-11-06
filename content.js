@@ -48,10 +48,12 @@ document.addEventListener("mouseup", () => {
     document.body.appendChild(sidebar);
 
     // Optional: Remove the sidebar if the user clicks outside it
-    document.addEventListener("click", (event) => {
+    const outsideClickListener = (event) => {
       if (!sidebar.contains(event.target)) {
         sidebar.remove();
+        document.removeEventListener("click", outsideClickListener);
       }
-    });
+    };
+    document.addEventListener("click", outsideClickListener);
   }
 });
