@@ -1,3 +1,4 @@
+Manifest.json: 
 {
   "manifest_version": 3,
   "name": "AI Republic Translate",
@@ -17,9 +18,11 @@
     }
   ],
   "web_accessible_resources": [
-    {
-      "resources": ["sidebar.js", "popup.js"],  
-      "matches": ["<all_urls>"]
-    }
-  ]
+  {
+    "resources": ["sidebar.js", "style.css", "popup.html", "popup.js", "popup.svelte"],
+    "matches": ["<all_urls>"]
+  }
+]
+
 }
+
