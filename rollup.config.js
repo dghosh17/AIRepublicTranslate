@@ -4,7 +4,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import css from 'rollup-plugin-css-only';
 
 export default {
-  input: 'popup.js', // Your main Svelte entry file
+  input: 'popup.svelte', // Your main Svelte entry file
   output: {
     file: 'popup.js', // Output to the same file name for compatibility
     format: 'iife',   // Use an immediately-invoked function expression (IIFE)
@@ -12,14 +12,15 @@ export default {
   },
   plugins: [
     svelte({
-      // Enable run-time checks when not in production
-      dev: !production,
+      dev: !production,          // Enable run-time checks when not in production
+      emitCss: true,             // Extract CSS
     }),
-    css({ output: 'bundle.css' }),
+    css({ output: 'bundle.css' }), // Outputs CSS to bundle.css
     resolve({
       browser: true,
-      dedupe: ['svelte']
+      dedupe: ['svelte']         // Avoids duplicated Svelte libraries
     }),
-    commonjs()
+    commonjs(),
+    production && terser()       // Minify code in production
   ]
 };
