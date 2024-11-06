@@ -13,7 +13,7 @@ app.post('/translate', (req, res) => {
     ? `Translate this English text to Chinese: "${text}"`
     : `Translate this Chinese text to English: "${text}"`;
 
-  const command = `ollama generate llama3.1 --prompt "${prompt}"`;
+  const command = `ollama generate llama3 --prompt "${prompt}"`;
 
   exec(command, (error, stdout, stderr) => {
     if (error) {
