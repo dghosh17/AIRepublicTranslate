@@ -18,8 +18,8 @@ const showTranslationButton = () => {
     button.innerText = "Translate";
     button.style.cssText = `
       position: absolute;
-      top: ${rect.top + window.scrollY + rect.height + 10}px; /* Button below the selected text */
-      left: ${rect.left + window.scrollX + 10}px; /* Button next to the selected text */
+      top: ${rect.top + window.scrollY + rect.height + 10}px; /* Button below the text */
+      left: ${rect.left + window.scrollX + 10}px; /* Button next to the text */
       padding: 8px 12px;
       background-color: #007bff;
       color: white;
@@ -35,7 +35,7 @@ const showTranslationButton = () => {
     // Button hover effect
     button.onmouseover = () => button.style.backgroundColor = "#0056b3";
     button.onmouseout = () => button.style.backgroundColor = "#007bff";
-
+    
     // Append the button to the body
     document.body.appendChild(button);
 
@@ -64,14 +64,14 @@ const showTranslationButton = () => {
         overflow-y: auto;
       `;
 
-      // Create header with centered title
+      // Create header with large title
       const header = document.createElement("h2");
       header.innerText = "AI Republic Translate";
       header.style.cssText = `
         font-size: 22px;
-        text-align: center; /* Center the title */
         margin-bottom: 20px;
         color: #333;
+        text-align: center;
       `;
       sidebar.appendChild(header);
 
