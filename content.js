@@ -123,14 +123,18 @@ const showTranslationButton = () => {
       // Append the sidebar to the body
       document.body.appendChild(sidebar);
 
-      // Add event listener to close sidebar on outside click
-      document.addEventListener("click", (event) => {
+      // Function to close sidebar on outside click
+      const closeSidebarOnClickOutside = (event) => {
         const isClickInside = sidebar.contains(event.target) || button.contains(event.target);
         if (!isClickInside) {
           sidebar.remove();
           button.remove();
+          document.removeEventListener("click", closeSidebarOnClickOutside); // Remove listener after closing
         }
-      }, { once: true });
+      };
+
+      // Add event listener to close sidebar on outside click
+      document.addEventListener("click", closeSidebarOnClickOutside);
     };
   }
 };
