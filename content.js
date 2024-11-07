@@ -38,8 +38,6 @@ const showTranslationButton = () => {
 
     // Handle button click to show the sidebar
     button.onclick = () => {
-      console.log("Translate button clicked");
-
       // Remove any existing sidebar
       const existingSidebar = document.querySelector("#translateSidebar");
       if (existingSidebar) existingSidebar.remove();
@@ -88,22 +86,6 @@ const showTranslationButton = () => {
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
       `;
 
-      // Create Translate to Chinese button
-      const translateToChineseButton = document.createElement("button");
-      translateToChineseButton.innerText = "Translate to Chinese";
-      translateToChineseButton.style.cssText = buttonStyle;
-      translateToChineseButton.onmouseover = () => translateToChineseButton.style.backgroundColor = "#0056b3";
-      translateToChineseButton.onmouseout = () => translateToChineseButton.style.backgroundColor = "#007bff";
-      translateToChineseButton.onclick = () => {
-        chrome.runtime.sendMessage(
-          { type: "TRANSLATE_TEXT", text: selectedText, targetLang: "Chinese" },
-          (response) => {
-            alert(response.translation || "No translation available.");
-          }
-        );
-      };
-      sidebar.appendChild(translateToChineseButton);
-
       // Create Translate to English button
       const translateToEnglishButton = document.createElement("button");
       translateToEnglishButton.innerText = "Translate to English";
@@ -119,6 +101,22 @@ const showTranslationButton = () => {
         );
       };
       sidebar.appendChild(translateToEnglishButton);
+
+      // Create Translate to Chinese button
+      const translateToChineseButton = document.createElement("button");
+      translateToChineseButton.innerText = "Translate to Chinese";
+      translateToChineseButton.style.cssText = buttonStyle;
+      translateToChineseButton.onmouseover = () => translateToChineseButton.style.backgroundColor = "#0056b3";
+      translateToChineseButton.onmouseout = () => translateToChineseButton.style.backgroundColor = "#007bff";
+      translateToChineseButton.onclick = () => {
+        chrome.runtime.sendMessage(
+          { type: "TRANSLATE_TEXT", text: selectedText, targetLang: "Chinese" },
+          (response) => {
+            alert(response.translation || "No translation available.");
+          }
+        );
+      };
+      sidebar.appendChild(translateToChineseButton);
 
       // Append the sidebar to the body
       document.body.appendChild(sidebar);
