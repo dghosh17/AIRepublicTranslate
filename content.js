@@ -69,9 +69,10 @@ function openSidebarWithText(text) {
       border-radius: 4px;
     `;
 
-    const translateButton = document.createElement("button");
-    translateButton.innerText = "Translate";
-    translateButton.style.cssText = `
+    // Translate to Chinese button
+    const translateToChineseButton = document.createElement("button");
+    translateToChineseButton.innerText = "Translate to Chinese";
+    translateToChineseButton.style.cssText = `
       width: 100%;
       padding: 10px;
       background-color: #007bff;
@@ -79,47 +80,49 @@ function openSidebarWithText(text) {
       border: none;
       border-radius: 4px;
       cursor: pointer;
+      margin-bottom: 10px;
     `;
-
-    translateButton.onclick = () => {
-      const targetLanguage = toggleLanguageButton.innerText.includes("Chinese") ? "Chinese" : "English";
-      chrome.runtime.sendMessage(
-        { type: "TRANSLATE_TEXT", text: inputTextBox.value, targetLang: targetLanguage },
-        (response) => {
-          if (chrome.runtime.lastError) {
-            logError("Error: " + chrome.runtime.lastError.message);
-          } else {
-            alert(response.translation || "Translation not available.");
-          }
-        }
-      );
+    translateToChineseButton.onclick = () => {
+      translateText(inputTextBox.value, "Chinese");
     };
 
-    const toggleLanguageButton = document.createElement("button");
-    toggleLanguageButton.innerText = "Switch to Chinese";
-    toggleLanguageButton.style.cssText = `
+    // Translate to English button
+    const translateToEnglishButton = document.createElement("button");
+    translateToEnglishButton.innerText = "Translate to English";
+    translateToEnglishButton.style.cssText = `
       width: 100%;
-      padding: 8px;
-      margin-top: 10px;
-      background-color: #6c757d;
+      padding: 10px;
+      background-color: #28a745;
       color: white;
       border: none;
       border-radius: 4px;
       cursor: pointer;
     `;
-
-    toggleLanguageButton.onclick = () => {
-      const isChinese = toggleLanguageButton.innerText.includes("Chinese");
-      toggleLanguageButton.innerText = isChinese ? "Switch to English" : "Switch to Chinese";
+    translateToEnglishButton.onclick = () => {
+      translateText(inputTextBox.value, "English");
     };
 
     sidebar.appendChild(inputTextBox);
-    sidebar.appendChild(translateButton);
-    sidebar.appendChild(toggleLanguageButton);
+    sidebar.appendChild(translateToChineseButton);
+    sidebar.appendChild(translateToEnglishButton);
     document.body.appendChild(sidebar);
   } catch (error) {
     logError("Failed to open sidebar: " + error.message);
   }
+}
+
+// Function to send a translation request
+function translateText(text, targetLang) {
+  chrome.runtime.sendMessage(
+    { type: "TRANSLATE_TEXT", text, targetLang },
+    (response) => {
+      if (chrome.runtime.lastError) {
+        logError("Error: " + chrome.runtime.lastError.message);
+      } else {
+        alert(response.translation || "Translation not available.");
+      }
+    }
+  );
 }
 
 // Event listener for text selection
