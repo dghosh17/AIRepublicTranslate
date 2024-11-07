@@ -3,6 +3,7 @@
   let inputText = "";
   let translation = "";
   let targetLang = "Chinese";
+  let showWidget = false;
 
   function handleTranslate() {
     chrome.runtime.sendMessage(
@@ -16,9 +17,18 @@
   function toggleLanguage() {
     targetLang = targetLang === "Chinese" ? "English" : "Chinese";
   }
+
+  function toggleWidget() {
+    showWidget = !showWidget;
+  }
 </script>
 
-<main>
+<button class="floating-button" on:click={toggleWidget}>
+  Translate
+</button>
+
+{#if showWidget}
+<main class="translate-widget">
   <h2>AI Republic Translate</h2>
   <textarea bind:value={inputText} placeholder="Enter text to translate"></textarea>
   <button on:click={handleTranslate}>Translate to {targetLang}</button>
@@ -26,18 +36,43 @@
     Switch to {targetLang === "Chinese" ? "English" : "Chinese"}
   </button>
   <p>Translation: {translation}</p>
+  <button class="close-button" on:click={toggleWidget}>Close</button>
 </main>
+{/if}
 
 <style>
-  main {
+  .floating-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 18px;
+    font-size: 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+  }
+
+  .floating-button:hover {
+    background-color: #0056b3;
+  }
+
+  .translate-widget {
+    position: fixed;
+    bottom: 70px;
+    right: 20px;
     display: flex;
     flex-direction: column;
     gap: 10px;
+    width: 300px;
     padding: 15px;
     font-family: 'Segoe UI', sans-serif;
     background-color: #f7f9fc;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
   }
 
   textarea {
@@ -62,6 +97,15 @@
 
   button:hover {
     background-color: #0056b3;
+  }
+
+  .close-button {
+    background-color: #d9534f;
+    margin-top: 10px;
+  }
+
+  .close-button:hover {
+    background-color: #c9302c;
   }
 
   h2 {
