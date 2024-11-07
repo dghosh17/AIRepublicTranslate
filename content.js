@@ -10,13 +10,15 @@ const showTranslationButton = () => {
     // Get the position of the selected text
     const range = window.getSelection().getRangeAt(0);
     const rect = range.getBoundingClientRect();
+
+    // Create the button
     const button = document.createElement("button");
     button.id = "openSidebarButton";
     button.innerText = "Translate";
     button.style.cssText = `
       position: absolute;
-      top: ${rect.top + window.scrollY}px;
-      left: ${rect.right + 10}px;
+      top: ${rect.top + window.scrollY + rect.height + 10}px; /* Button below the text */
+      left: ${rect.left + window.scrollX + 10}px; /* Button next to the text */
       padding: 8px 12px;
       background-color: #007bff;
       color: white;
@@ -28,17 +30,21 @@ const showTranslationButton = () => {
       transition: background-color 0.3s ease;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     `;
+    
+    // Button hover effect
     button.onmouseover = () => button.style.backgroundColor = "#0056b3";
     button.onmouseout = () => button.style.backgroundColor = "#007bff";
     
+    // Append the button to the body
     document.body.appendChild(button);
 
     // Handle button click to show the sidebar
     button.onclick = () => {
-      console.log("Translate button clicked"); // Debugging log to check if the button works
+      console.log("Translate button clicked");
 
+      // Remove any existing sidebar
       const existingSidebar = document.querySelector("#translateSidebar");
-      if (existingSidebar) existingSidebar.remove(); // Remove any existing sidebar
+      if (existingSidebar) existingSidebar.remove();
 
       // Create sidebar
       const sidebar = document.createElement("div");
@@ -116,7 +122,6 @@ const showTranslationButton = () => {
       sidebar.appendChild(translateToEnglishButton);
 
       // Append sidebar to the body
-      console.log("Appending sidebar"); // Debugging log to ensure sidebar is appended
       document.body.appendChild(sidebar);
     };
   }
