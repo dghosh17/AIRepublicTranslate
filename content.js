@@ -17,8 +17,8 @@ const showTranslationButton = () => {
     button.innerText = "Translate";
     button.style.cssText = `
       position: absolute;
-      top: ${rect.top + window.scrollY + rect.height + 10}px; /* Button below the text */
-      left: ${rect.left + window.scrollX + 10}px; /* Button next to the text */
+      top: ${rect.top + window.scrollY + rect.height + 10}px;
+      left: ${rect.left + window.scrollX + 10}px;
       padding: 8px 12px;
       background-color: #007bff;
       color: white;
@@ -32,7 +32,7 @@ const showTranslationButton = () => {
     `;
     button.onmouseover = () => button.style.backgroundColor = "#0056b3";
     button.onmouseout = () => button.style.backgroundColor = "#007bff";
-    
+
     // Append the button to the body
     document.body.appendChild(button);
 
@@ -42,7 +42,7 @@ const showTranslationButton = () => {
 
       // Remove any existing sidebar
       const existingSidebar = document.querySelector("#translateSidebar");
-      if (existingSidebar) existingSidebar.remove(); // Remove any old sidebar
+      if (existingSidebar) existingSidebar.remove();
 
       // Create the sidebar
       const sidebar = document.createElement("div");
@@ -122,6 +122,15 @@ const showTranslationButton = () => {
 
       // Append the sidebar to the body
       document.body.appendChild(sidebar);
+
+      // Add event listener to close sidebar on outside click
+      document.addEventListener("click", (event) => {
+        const isClickInside = sidebar.contains(event.target) || button.contains(event.target);
+        if (!isClickInside) {
+          sidebar.remove();
+          button.remove();
+        }
+      }, { once: true });
     };
   }
 };
