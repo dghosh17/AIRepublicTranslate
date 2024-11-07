@@ -37,7 +37,9 @@ const showTranslationButton = () => {
     document.body.appendChild(button);
 
     // Handle button click to show the sidebar
-    button.onclick = () => {
+    button.onclick = (event) => {
+      event.stopPropagation();  // Prevent the click from closing the sidebar
+
       // Remove any existing sidebar
       const existingSidebar = document.querySelector("#translateSidebar");
       if (existingSidebar) existingSidebar.remove();
