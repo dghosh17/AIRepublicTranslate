@@ -65,7 +65,7 @@ function openSidebarWithText(text) {
       box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
       padding: 15px;
       border-left: 1px solid #ddd;
-      font-family: 'Andante', sans-serif;
+      font-family: sans-serif;
     `;
 
     // Input text box containing highlighted text
@@ -96,7 +96,7 @@ function openSidebarWithText(text) {
       cursor: pointer;
       font-size: 16px;
     `;
-    
+
     translateButton.onmouseover = () => (translateButton.style.backgroundColor = "#0056b3");
     translateButton.onmouseout = () => (translateButton.style.backgroundColor = "#007bff");
 
@@ -104,7 +104,11 @@ function openSidebarWithText(text) {
       chrome.runtime.sendMessage(
         { type: "TRANSLATE_TEXT", text: inputTextBox.value, targetLang: "Chinese" },
         (response) => {
-          alert(response.translation || "Translation not available.");
+          if (chrome.runtime.lastError) {
+            logError("Error sending message to background script: " + chrome.runtime.lastError.message);
+          } else {
+            alert(response.translation || "Translation not available.");
+          }
         }
       );
     };
@@ -119,12 +123,18 @@ function openSidebarWithText(text) {
 
 // Event listener for text selection to show the Translate button
 document.addEventListener("mouseup", () => {
-  const selectedText = window.getSelection().toString().trim();
-
-  if (selectedText) {
-    const selectionRange = window.getSelection().getRangeAt(0).getBoundingClientRect();
-    const { x, y } = selectionRange;
-    showTranslateButton(selectedText, x + window.scrollX, y + window.scrollY + 20);
+  try {
+    const selection = window.getSelection();
+    if (selection && selection.rangeCount > 0) {
+      const selectedText = selection.toString().trim();
+      if (selectedText) {
+        const selectionRange = selection.getRangeAt(0).getBoundingClientRect();
+        const { x, y } = selectionRange;
+        showTranslateButton(selectedText, x + window.scrollX, y + window.scrollY + 20);
+      }
+    }
+  } catch (error) {
+    logError("Error handling text selection: " + error.message);
   }
 });
 
