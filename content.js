@@ -82,6 +82,7 @@ function openSidebarWithText(text) {
     `;
 
     translateButton.onclick = () => {
+      const targetLanguage = toggleLanguageButton.innerText.includes("Chinese") ? "Chinese" : "English";
       chrome.runtime.sendMessage(
         { type: "TRANSLATE_TEXT", text: inputTextBox.value, targetLang: targetLanguage },
         (response) => {
@@ -107,11 +108,9 @@ function openSidebarWithText(text) {
       cursor: pointer;
     `;
 
-    let targetLanguage = "Chinese"; // Default target language
-
     toggleLanguageButton.onclick = () => {
-      targetLanguage = targetLanguage === "Chinese" ? "English" : "Chinese";
-      toggleLanguageButton.innerText = targetLanguage === "Chinese" ? "Switch to English" : "Switch to Chinese";
+      const isChinese = toggleLanguageButton.innerText.includes("Chinese");
+      toggleLanguageButton.innerText = isChinese ? "Switch to English" : "Switch to Chinese";
     };
 
     sidebar.appendChild(inputTextBox);
