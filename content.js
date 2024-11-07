@@ -2,7 +2,7 @@
 const showTranslationButton = () => {
   const selectedText = window.getSelection().toString().trim();
 
-  // If there is selected text, show the button
+  // Only show the button if there's selected text
   if (selectedText) {
     // Remove any existing translation button
     const existingButton = document.querySelector("#openSidebarButton");
@@ -47,7 +47,7 @@ const showTranslationButton = () => {
       const existingSidebar = document.querySelector("#translateSidebar");
       if (existingSidebar) existingSidebar.remove();
 
-      // Create sidebar
+      // Create the sidebar
       const sidebar = document.createElement("div");
       sidebar.id = "translateSidebar";
       sidebar.style.cssText = `
