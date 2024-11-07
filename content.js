@@ -1,44 +1,7 @@
-// Helper function to log errors
-function logError(message) {
-  console.error(`Translate Extension Error: ${message}`);
-}
+document.addEventListener("mouseup", () => {
+  const selectedText = window.getSelection().toString().trim();
 
-// Function to create and display the floating "Translate" button
-function showTranslateButton(text, x, y) {
-  try {
-    const existingButton = document.querySelector("#floatingTranslateButton");
-    if (existingButton) existingButton.remove();
-
-    const button = document.createElement("button");
-    button.id = "floatingTranslateButton";
-    button.innerText = "Translate";
-    button.style.cssText = `
-      position: absolute;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      padding: 8px;
-      cursor: pointer;
-      z-index: 10000;
-      left: ${x}px;
-      top: ${y}px;
-    `;
-
-    button.onclick = () => {
-      openSidebarWithText(text);
-      button.remove();
-    };
-
-    document.body.appendChild(button);
-  } catch (error) {
-    logError("Failed to show Translate button: " + error.message);
-  }
-}
-
-// Function to open the sidebar and populate the text box
-function openSidebarWithText(text) {
-  try {
+  if (selectedText) {
     const existingSidebar = document.querySelector("#translateSidebar");
     if (existingSidebar) existingSidebar.remove();
 
@@ -50,105 +13,65 @@ function openSidebarWithText(text) {
       top: 0;
       width: 320px;
       height: 100vh;
-      background-color: #f9f9f9;
+      background-color: #ffffff;
       z-index: 10000;
       box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
       padding: 15px;
-      font-family: Arial, sans-serif;
+      border-left: 1px solid #ddd;
     `;
 
-    const inputTextBox = document.createElement("textarea");
-    inputTextBox.value = text;
-    inputTextBox.style.cssText = `
-      width: 100%;
-      height: 100px;
-      margin-bottom: 10px;
-      padding: 8px;
-      font-size: 14px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    `;
+    const header = document.createElement("h3");
+    header.innerText = "AI Republic Translate";
+    sidebar.appendChild(header);
 
-    // Translate to Chinese button
     const translateToChineseButton = document.createElement("button");
     translateToChineseButton.innerText = "Translate to Chinese";
     translateToChineseButton.style.cssText = `
+      display: block;
       width: 100%;
       padding: 10px;
+      margin-top: 10px;
       background-color: #007bff;
-      color: white;
+      color: #fff;
       border: none;
       border-radius: 4px;
       cursor: pointer;
-      margin-bottom: 10px;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
     `;
+    translateToChineseButton.onmouseover = () => translateToChineseButton.style.backgroundColor = "#0056b3";
+    translateToChineseButton.onmouseout = () => translateToChineseButton.style.backgroundColor = "#007bff";
     translateToChineseButton.onclick = () => {
-      translateText(inputTextBox.value, "Chinese");
+      chrome.runtime.sendMessage({ type: "TRANSLATE_TEXT", text: selectedText, targetLang: "Chinese" }, (response) => {
+        alert(response.translation || "No translation available.");
+      });
     };
+    sidebar.appendChild(translateToChineseButton);
 
-    // Translate to English button
     const translateToEnglishButton = document.createElement("button");
     translateToEnglishButton.innerText = "Translate to English";
     translateToEnglishButton.style.cssText = `
+      display: block;
       width: 100%;
       padding: 10px;
-      background-color: #28a745;
-      color: white;
+      margin-top: 10px;
+      background-color: #007bff;
+      color: #fff;
       border: none;
       border-radius: 4px;
       cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
     `;
+    translateToEnglishButton.onmouseover = () => translateToEnglishButton.style.backgroundColor = "#0056b3";
+    translateToEnglishButton.onmouseout = () => translateToEnglishButton.style.backgroundColor = "#007bff";
     translateToEnglishButton.onclick = () => {
-      translateText(inputTextBox.value, "English");
+      chrome.runtime.sendMessage({ type: "TRANSLATE_TEXT", text: selectedText, targetLang: "English" }, (response) => {
+        alert(response.translation || "No translation available.");
+      });
     };
-
-    sidebar.appendChild(inputTextBox);
-    sidebar.appendChild(translateToChineseButton);
     sidebar.appendChild(translateToEnglishButton);
+
     document.body.appendChild(sidebar);
-  } catch (error) {
-    logError("Failed to open sidebar: " + error.message);
-  }
-}
-
-// Function to send a translation request
-function translateText(text, targetLang) {
-  chrome.runtime.sendMessage(
-    { type: "TRANSLATE_TEXT", text, targetLang },
-    (response) => {
-      if (chrome.runtime.lastError) {
-        logError("Error: " + chrome.runtime.lastError.message);
-      } else {
-        alert(response.translation || "Translation not available.");
-      }
-    }
-  );
-}
-
-// Event listener for text selection
-document.addEventListener("mouseup", () => {
-  try {
-    const selection = window.getSelection();
-    if (selection && selection.rangeCount > 0) {
-      const selectedText = selection.toString().trim();
-      if (selectedText) {
-        const selectionRange = selection.getRangeAt(0).getBoundingClientRect();
-        const { x, y } = selectionRange;
-        showTranslateButton(selectedText, x + window.scrollX, y + window.scrollY + 20);
-      }
-    }
-  } catch (error) {
-    logError("Error handling text selection: " + error.message);
   }
 });
-
-// Remove the floating button on click elsewhere
-document.addEventListener("click", (event) => {
-  const button = document.querySelector("#floatingTranslateButton");
-  if (button && !button.contains(event.target)) {
-    button.remove();
-  }
-});
-
-// Log successful script load
-console.log("Translate extension script loaded.");
