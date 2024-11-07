@@ -72,25 +72,6 @@ const showTranslationButton = () => {
       `;
       sidebar.appendChild(header);
 
-      // Create exit button
-      const exitButton = document.createElement("button");
-      exitButton.innerText = "✖";
-      exitButton.style.cssText = `
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background: transparent;
-        border: none;
-        font-size: 20px;
-        cursor: pointer;
-        color: #333;
-        transition: color 0.3s ease;
-      `;
-      exitButton.onmouseover = () => exitButton.style.color = "#ff0000";
-      exitButton.onmouseout = () => exitButton.style.color = "#333";
-      exitButton.onclick = () => sidebar.remove();
-      sidebar.appendChild(exitButton);
-
       // Button styles for translation
       const buttonStyle = `
         display: block;
