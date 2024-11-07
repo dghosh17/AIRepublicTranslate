@@ -1,126 +1,150 @@
-// Listen for mouseup events to detect text selection
-document.addEventListener("mouseup", () => {
-  const selectedText = window.getSelection().toString().trim();
+// Helper function to log errors and diagnostics
+function logError(message) {
+  console.error(`Translate Extension Error: ${message}`);
+}
 
-  if (selectedText) {
-    // Check if a floating widget already exists
-    const existingWidget = document.querySelector("#translateWidget");
-    if (existingWidget) existingWidget.remove();
+// Function to create and display the floating "Translate" button
+function showTranslateButton(text, x, y) {
+  try {
+    // Remove any existing button first to avoid duplicates
+    const existingButton = document.querySelector("#floatingTranslateButton");
+    if (existingButton) existingButton.remove();
 
-    // Create a floating widget icon near the mouse position
-    const widget = document.createElement("div");
-    widget.id = "translateWidget";
-    widget.innerText = "Translate";
-    widget.style.cssText = `
+    const button = document.createElement("button");
+    button.id = "floatingTranslateButton";
+    button.innerText = "Translate";
+    button.style.cssText = `
       position: absolute;
-      top: ${event.pageY + 10}px;
-      left: ${event.pageX + 10}px;
-      padding: 8px 15px;
       background-color: #007bff;
-      color: #fff;
-      font-size: 16px;
-      font-weight: bold;
+      color: white;
+      border: none;
       border-radius: 5px;
+      padding: 8px;
       cursor: pointer;
       z-index: 10000;
+      font-size: 14px;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-      transition: transform 0.1s ease;
+      transition: background-color 0.3s ease;
+      left: ${x}px;
+      top: ${y}px;
     `;
-    widget.onmouseover = () => widget.style.transform = "scale(1.05)";
-    widget.onmouseout = () => widget.style.transform = "scale(1)";
-    
-    // On click, show the sidebar and remove the widget
-    widget.onclick = () => {
-      createSidebar(selectedText);
-      widget.remove();
+
+    button.onmouseover = () => (button.style.backgroundColor = "#0056b3");
+    button.onmouseout = () => (button.style.backgroundColor = "#007bff");
+
+    // Open sidebar on click and auto-populate text
+    button.onclick = () => {
+      openSidebarWithText(text);
+      button.remove(); // Ensure button disappears after click
     };
 
-    document.body.appendChild(widget);
+    document.body.appendChild(button);
+  } catch (error) {
+    logError("Failed to show Translate button: " + error.message);
+  }
+}
+
+// Function to open the sidebar and populate the text box with selected text
+function openSidebarWithText(text) {
+  try {
+    // Remove existing sidebar to prevent multiple instances
+    const existingSidebar = document.querySelector("#translateSidebar");
+    if (existingSidebar) existingSidebar.remove();
+
+    // Create sidebar container
+    const sidebar = document.createElement("div");
+    sidebar.id = "translateSidebar";
+    sidebar.style.cssText = `
+      position: fixed;
+      right: 0;
+      top: 0;
+      width: 320px;
+      height: 100vh;
+      background-color: #ffffff;
+      z-index: 10000;
+      box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+      padding: 15px;
+      border-left: 1px solid #ddd;
+      font-family: sans-serif;
+    `;
+
+    // Input text box containing highlighted text
+    const inputTextBox = document.createElement("textarea");
+    inputTextBox.value = text;
+    inputTextBox.style.cssText = `
+      width: 100%;
+      height: 100px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      resize: vertical;
+    `;
+
+    // Translate button in the sidebar
+    const translateButton = document.createElement("button");
+    translateButton.innerText = "Translate";
+    translateButton.style.cssText = `
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    `;
+
+    translateButton.onmouseover = () => (translateButton.style.backgroundColor = "#0056b3");
+    translateButton.onmouseout = () => (translateButton.style.backgroundColor = "#007bff");
+
+    translateButton.onclick = () => {
+      chrome.runtime.sendMessage(
+        { type: "TRANSLATE_TEXT", text: inputTextBox.value, targetLang: "Chinese" },
+        (response) => {
+          if (chrome.runtime.lastError) {
+            logError("Error sending message to background script: " + chrome.runtime.lastError.message);
+          } else {
+            alert(response.translation || "Translation not available.");
+          }
+        }
+      );
+    };
+
+    sidebar.appendChild(inputTextBox);
+    sidebar.appendChild(translateButton);
+    document.body.appendChild(sidebar);
+  } catch (error) {
+    logError("Failed to open sidebar: " + error.message);
+  }
+}
+
+// Event listener for text selection to show the Translate button
+document.addEventListener("mouseup", () => {
+  try {
+    const selection = window.getSelection();
+    if (selection && selection.rangeCount > 0) {
+      const selectedText = selection.toString().trim();
+      if (selectedText) {
+        const selectionRange = selection.getRangeAt(0).getBoundingClientRect();
+        const { x, y } = selectionRange;
+        showTranslateButton(selectedText, x + window.scrollX, y + window.scrollY + 20);
+      }
+    }
+  } catch (error) {
+    logError("Error handling text selection: " + error.message);
   }
 });
 
-// Function to create the sidebar
-function createSidebar(text) {
-  // Remove any existing sidebar
-  const existingSidebar = document.querySelector("#translateSidebar");
-  if (existingSidebar) existingSidebar.remove();
+// Remove the floating button if the user clicks elsewhere
+document.addEventListener("click", (event) => {
+  const button = document.querySelector("#floatingTranslateButton");
+  if (button && !button.contains(event.target)) {
+    button.remove();
+  }
+});
 
-  // Create the sidebar element
-  const sidebar = document.createElement("div");
-  sidebar.id = "translateSidebar";
-  sidebar.style.cssText = `
-    position: fixed;
-    right: 0;
-    top: 0;
-    width: 320px;
-    height: 100vh;
-    background-color: #ffffff;
-    z-index: 10000;
-    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.2);
-    padding: 20px;
-    border-left: 1px solid #ddd;
-    font-family: Arial, sans-serif;
-  `;
-
-  // Sidebar header
-  const header = document.createElement("h3");
-  header.innerText = "AI Republic Translate";
-  header.style.cssText = `
-    font-size: 20px;
-    color: #333;
-    margin: 0 0 20px;
-    text-align: center;
-  `;
-  sidebar.appendChild(header);
-
-  // Translation button
-  const translateButton = document.createElement("button");
-  translateButton.innerText = `Translate to Chinese`;
-  translateButton.style.cssText = `
-    display: block;
-    width: 100%;
-    padding: 15px;
-    margin-top: 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 18px;
-    font-weight: bold;
-    transition: background-color 0.3s ease, transform 0.1s ease;
-  `;
-  translateButton.onmouseover = () => translateButton.style.backgroundColor = "#0056b3";
-  translateButton.onmouseout = () => translateButton.style.backgroundColor = "#007bff";
-  translateButton.onclick = () => {
-    chrome.runtime.sendMessage(
-      { type: "TRANSLATE_TEXT", text, targetLang: "Chinese" },
-      (response) => {
-        alert(response.translation || "No translation available.");
-      }
-    );
-  };
-  sidebar.appendChild(translateButton);
-
-  // Close button for the sidebar
-  const closeButton = document.createElement("button");
-  closeButton.innerText = "Close";
-  closeButton.style.cssText = `
-    display: block;
-    width: 100%;
-    padding: 15px;
-    margin-top: 15px;
-    background-color: #d9534f;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 16px;
-  `;
-  closeButton.onmouseover = () => closeButton.style.backgroundColor = "#c9302c";
-  closeButton.onmouseout = () => closeButton.style.backgroundColor = "#d9534f";
-  closeButton.onclick = () => sidebar.remove();
-  sidebar.appendChild(closeButton);
-
-  document.body.appendChild(sidebar);
-}
+// Log successful load of the script
+console.log("Translate extension loaded. Waiting for user selection.");
