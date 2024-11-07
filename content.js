@@ -63,11 +63,12 @@ const showTranslationButton = () => {
         overflow-y: auto;
       `;
 
-      // Create header with large title
+      // Create header with centered title
       const header = document.createElement("h2");
       header.innerText = "AI Republic Translate";
       header.style.cssText = `
         font-size: 22px;
+        text-align: center; /* Center the title */
         margin-bottom: 20px;
         color: #333;
       `;
