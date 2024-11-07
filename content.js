@@ -2,23 +2,24 @@
 const showTranslationButton = () => {
   const selectedText = window.getSelection().toString().trim();
 
-  // Remove any existing translation button
-  const existingButton = document.querySelector("#openSidebarButton");
-  if (existingButton) existingButton.remove();
-
+  // If there is selected text, show the button
   if (selectedText) {
+    // Remove any existing translation button
+    const existingButton = document.querySelector("#openSidebarButton");
+    if (existingButton) existingButton.remove();
+
     // Get the position of the selected text
     const range = window.getSelection().getRangeAt(0);
     const rect = range.getBoundingClientRect();
 
-    // Create the button
+    // Create the translation button
     const button = document.createElement("button");
     button.id = "openSidebarButton";
     button.innerText = "Translate";
     button.style.cssText = `
       position: absolute;
-      top: ${rect.top + window.scrollY + rect.height + 10}px; /* Button below the text */
-      left: ${rect.left + window.scrollX + 10}px; /* Button next to the text */
+      top: ${rect.top + window.scrollY + rect.height + 10}px; /* Button below the selected text */
+      left: ${rect.left + window.scrollX + 10}px; /* Button next to the selected text */
       padding: 8px 12px;
       background-color: #007bff;
       color: white;
