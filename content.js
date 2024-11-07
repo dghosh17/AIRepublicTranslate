@@ -1,10 +1,35 @@
-document.addEventListener("mouseup", () => {
+// Create a floating button to open the sidebar
+const openSidebarButton = document.createElement("button");
+openSidebarButton.id = "openSidebarButton";
+openSidebarButton.innerText = "Translate";
+openSidebarButton.style.cssText = `
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  z-index: 10001;
+  transition: background-color 0.3s ease;
+`;
+openSidebarButton.onmouseover = () => openSidebarButton.style.backgroundColor = "#0056b3";
+openSidebarButton.onmouseout = () => openSidebarButton.style.backgroundColor = "#007bff";
+
+// Append the button to the document body
+document.body.appendChild(openSidebarButton);
+
+openSidebarButton.onclick = () => {
   const selectedText = window.getSelection().toString().trim();
 
   if (selectedText) {
     const existingSidebar = document.querySelector("#translateSidebar");
     if (existingSidebar) existingSidebar.remove();
 
+    // Create sidebar
     const sidebar = document.createElement("div");
     sidebar.id = "translateSidebar";
     sidebar.style.cssText = `
@@ -20,13 +45,17 @@ document.addEventListener("mouseup", () => {
       border-left: 1px solid #ddd;
     `;
 
-    const header = document.createElement("h3");
+    // Create header with larger title
+    const header = document.createElement("h1");
     header.innerText = "AI Republic Translate";
+    header.style.cssText = `
+      font-size: 24px;
+      margin: 0 0 10px;
+    `;
     sidebar.appendChild(header);
 
-    const translateToChineseButton = document.createElement("button");
-    translateToChineseButton.innerText = "Translate to Chinese";
-    translateToChineseButton.style.cssText = `
+    // Button styles
+    const buttonStyle = `
       display: block;
       width: 100%;
       padding: 10px;
@@ -39,39 +68,44 @@ document.addEventListener("mouseup", () => {
       font-size: 16px;
       transition: background-color 0.3s ease;
     `;
-    translateToChineseButton.onmouseover = () => translateToChineseButton.style.backgroundColor = "#0056b3";
-    translateToChineseButton.onmouseout = () => translateToChineseButton.style.backgroundColor = "#007bff";
+
+    // Function to handle button hover
+    function handleHover(button, hoverColor, originalColor) {
+      button.onmouseover = () => (button.style.backgroundColor = hoverColor);
+      button.onmouseout = () => (button.style.backgroundColor = originalColor);
+    }
+
+    // Create Translate to Chinese button
+    const translateToChineseButton = document.createElement("button");
+    translateToChineseButton.innerText = "Translate to Chinese";
+    translateToChineseButton.style.cssText = buttonStyle;
+    handleHover(translateToChineseButton, "#0056b3", "#007bff");
     translateToChineseButton.onclick = () => {
-      chrome.runtime.sendMessage({ type: "TRANSLATE_TEXT", text: selectedText, targetLang: "Chinese" }, (response) => {
-        alert(response.translation || "No translation available.");
-      });
+      chrome.runtime.sendMessage(
+        { type: "TRANSLATE_TEXT", text: selectedText, targetLang: "Chinese" },
+        (response) => {
+          alert(response.translation || "No translation available.");
+        }
+      );
     };
     sidebar.appendChild(translateToChineseButton);
 
+    // Create Translate to English button
     const translateToEnglishButton = document.createElement("button");
     translateToEnglishButton.innerText = "Translate to English";
-    translateToEnglishButton.style.cssText = `
-      display: block;
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      background-color: #007bff;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background-color 0.3s ease;
-    `;
-    translateToEnglishButton.onmouseover = () => translateToEnglishButton.style.backgroundColor = "#0056b3";
-    translateToEnglishButton.onmouseout = () => translateToEnglishButton.style.backgroundColor = "#007bff";
+    translateToEnglishButton.style.cssText = buttonStyle;
+    handleHover(translateToEnglishButton, "#0056b3", "#007bff");
     translateToEnglishButton.onclick = () => {
-      chrome.runtime.sendMessage({ type: "TRANSLATE_TEXT", text: selectedText, targetLang: "English" }, (response) => {
-        alert(response.translation || "No translation available.");
-      });
+      chrome.runtime.sendMessage(
+        { type: "TRANSLATE_TEXT", text: selectedText, targetLang: "English" },
+        (response) => {
+          alert(response.translation || "No translation available.");
+        }
+      );
     };
     sidebar.appendChild(translateToEnglishButton);
 
+    // Append sidebar to body
     document.body.appendChild(sidebar);
   }
-});
+};
