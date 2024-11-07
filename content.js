@@ -2,7 +2,6 @@
 const showTranslationButton = () => {
   const selectedText = window.getSelection().toString().trim();
 
-  // Only show the button if there's selected text
   if (selectedText) {
     // Remove any existing translation button
     const existingButton = document.querySelector("#openSidebarButton");
@@ -11,15 +10,13 @@ const showTranslationButton = () => {
     // Get the position of the selected text
     const range = window.getSelection().getRangeAt(0);
     const rect = range.getBoundingClientRect();
-
-    // Create the translation button
     const button = document.createElement("button");
     button.id = "openSidebarButton";
     button.innerText = "Translate";
     button.style.cssText = `
       position: absolute;
-      top: ${rect.top + window.scrollY + rect.height + 10}px; /* Button below the text */
-      left: ${rect.left + window.scrollX + 10}px; /* Button next to the text */
+      top: ${rect.top + window.scrollY}px;
+      left: ${rect.right + 10}px;
       padding: 8px 12px;
       background-color: #007bff;
       color: white;
@@ -31,23 +28,19 @@ const showTranslationButton = () => {
       transition: background-color 0.3s ease;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     `;
-    
-    // Button hover effect
     button.onmouseover = () => button.style.backgroundColor = "#0056b3";
     button.onmouseout = () => button.style.backgroundColor = "#007bff";
     
-    // Append the button to the body
     document.body.appendChild(button);
 
     // Handle button click to show the sidebar
     button.onclick = () => {
-      console.log("Translate button clicked");
+      console.log("Translate button clicked"); // Debugging log to check if the button works
 
-      // Remove any existing sidebar
       const existingSidebar = document.querySelector("#translateSidebar");
-      if (existingSidebar) existingSidebar.remove();
+      if (existingSidebar) existingSidebar.remove(); // Remove any existing sidebar
 
-      // Create the sidebar
+      // Create sidebar
       const sidebar = document.createElement("div");
       sidebar.id = "translateSidebar";
       sidebar.style.cssText = `
@@ -71,7 +64,6 @@ const showTranslationButton = () => {
         font-size: 22px;
         margin-bottom: 20px;
         color: #333;
-        text-align: center;
       `;
       sidebar.appendChild(header);
 
@@ -124,6 +116,7 @@ const showTranslationButton = () => {
       sidebar.appendChild(translateToEnglishButton);
 
       // Append sidebar to the body
+      console.log("Appending sidebar"); // Debugging log to ensure sidebar is appended
       document.body.appendChild(sidebar);
     };
   }
