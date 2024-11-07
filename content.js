@@ -20,9 +20,13 @@ document.addEventListener("mouseup", () => {
       border-left: 1px solid #ddd;
     `;
 
-    const translateButton = document.createElement("button");
-    translateButton.innerText = "Translate";
-    translateButton.style.cssText = `
+    const header = document.createElement("h3");
+    header.innerText = "AI Republic Translate";
+    sidebar.appendChild(header);
+
+    const translateToChineseButton = document.createElement("button");
+    translateToChineseButton.innerText = "Translate to Chinese";
+    translateToChineseButton.style.cssText = `
       display: block;
       width: 100%;
       padding: 10px;
@@ -35,16 +39,39 @@ document.addEventListener("mouseup", () => {
       font-size: 16px;
       transition: background-color 0.3s ease;
     `;
-    translateButton.onmouseover = () => translateButton.style.backgroundColor = "#0056b3";
-    translateButton.onmouseout = () => translateButton.style.backgroundColor = "#007bff";
-
-    translateButton.onclick = () => {
+    translateToChineseButton.onmouseover = () => translateToChineseButton.style.backgroundColor = "#0056b3";
+    translateToChineseButton.onmouseout = () => translateToChineseButton.style.backgroundColor = "#007bff";
+    translateToChineseButton.onclick = () => {
       chrome.runtime.sendMessage({ type: "TRANSLATE_TEXT", text: selectedText, targetLang: "Chinese" }, (response) => {
         alert(response.translation || "No translation available.");
       });
     };
+    sidebar.appendChild(translateToChineseButton);
 
-    sidebar.appendChild(translateButton);
+    const translateToEnglishButton = document.createElement("button");
+    translateToEnglishButton.innerText = "Translate to English";
+    translateToEnglishButton.style.cssText = `
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    `;
+    translateToEnglishButton.onmouseover = () => translateToEnglishButton.style.backgroundColor = "#0056b3";
+    translateToEnglishButton.onmouseout = () => translateToEnglishButton.style.backgroundColor = "#007bff";
+    translateToEnglishButton.onclick = () => {
+      chrome.runtime.sendMessage({ type: "TRANSLATE_TEXT", text: selectedText, targetLang: "English" }, (response) => {
+        alert(response.translation || "No translation available.");
+      });
+    };
+    sidebar.appendChild(translateToEnglishButton);
+
     document.body.appendChild(sidebar);
   }
 });
