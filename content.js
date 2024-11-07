@@ -129,13 +129,5 @@ const showTranslationButton = () => {
   }
 };
 
-// Close the button when clicking outside
-document.addEventListener("click", (event) => {
-  const button = document.querySelector("#openSidebarButton");
-  if (button && !button.contains(event.target) && !document.querySelector("#translateSidebar")?.contains(event.target)) {
-    button.remove();
-  }
-});
-
 // Listen for text selection and display the button
 document.addEventListener("mouseup", showTranslationButton);
