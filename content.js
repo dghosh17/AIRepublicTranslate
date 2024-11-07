@@ -2,11 +2,11 @@
 const showTranslationButton = () => {
   const selectedText = window.getSelection().toString().trim();
 
-  if (selectedText) {
-    // Remove any existing translation button
-    const existingButton = document.querySelector("#openSidebarButton");
-    if (existingButton) existingButton.remove();
+  // Remove any existing translation button
+  const existingButton = document.querySelector("#openSidebarButton");
+  if (existingButton) existingButton.remove();
 
+  if (selectedText) {
     // Get the position of the selected text
     const range = window.getSelection().getRangeAt(0);
     const rect = range.getBoundingClientRect();
@@ -34,7 +34,7 @@ const showTranslationButton = () => {
     // Button hover effect
     button.onmouseover = () => button.style.backgroundColor = "#0056b3";
     button.onmouseout = () => button.style.backgroundColor = "#007bff";
-    
+
     // Append the button to the body
     document.body.appendChild(button);
 
@@ -127,6 +127,14 @@ const showTranslationButton = () => {
     };
   }
 };
+
+// Close the button when clicking outside
+document.addEventListener("click", (event) => {
+  const button = document.querySelector("#openSidebarButton");
+  if (button && !button.contains(event.target) && !document.querySelector("#translateSidebar")?.contains(event.target)) {
+    button.remove();
+  }
+});
 
 // Listen for text selection and display the button
 document.addEventListener("mouseup", showTranslationButton);
