@@ -1,4 +1,4 @@
-// Function to create and display the floating "Translate" button
+// Function to creat// Function to create and display the floating "Translate" button
 function showTranslateButton(text, x, y) {
   // Remove any existing button first
   const existingButton = document.querySelector("#floatingTranslateButton");
@@ -12,24 +12,29 @@ function showTranslateButton(text, x, y) {
     background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 5px;
-    padding: 8px;
+    border-radius: 6px;
+    padding: 10px 12px;
     cursor: pointer;
     z-index: 10000;
-    font-size: 14px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    transition: background-color 0.3s ease;
+    font-size: 15px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.2s;
     left: ${x}px;
     top: ${y}px;
   `;
 
-  button.onmouseover = () => (button.style.backgroundColor = "#0056b3");
-  button.onmouseout = () => (button.style.backgroundColor = "#007bff");
+  button.onmouseover = () => {
+    button.style.backgroundColor = "#0056b3";
+    button.style.transform = "scale(1.05)";
+  };
+  button.onmouseout = () => {
+    button.style.backgroundColor = "#007bff";
+    button.style.transform = "scale(1)";
+  };
 
-  // On button click, open the sidebar and populate with the selected text
   button.onclick = () => {
     openSidebarWithText(text);
-    button.remove(); // Remove the button after it's clicked
+    button.remove();
   };
 
   document.body.appendChild(button);
@@ -50,12 +55,15 @@ function openSidebarWithText(text) {
     top: 0;
     width: 320px;
     height: 100vh;
-    background-color: #ffffff;
+    background-color: #f9f9f9;
     z-index: 10000;
-    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
-    padding: 15px;
+    box-shadow: -3px 0 8px rgba(0, 0, 0, 0.15);
+    padding: 20px;
     border-left: 1px solid #ddd;
     font-family: 'Andante', sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
   `;
 
   // Input text box with highlighted text
@@ -63,35 +71,40 @@ function openSidebarWithText(text) {
   inputTextBox.value = text; // Populate with selected text
   inputTextBox.style.cssText = `
     width: 100%;
-    height: 100px;
-    padding: 10px;
-    font-size: 16px;
+    height: 120px;
+    padding: 12px;
+    font-size: 15px;
     border: 1px solid #ccc;
-    border-radius: 5px;
-    resize: vertical;
+    border-radius: 6px;
+    resize: none;
+    font-family: 'Andante', sans-serif;
+    box-sizing: border-box;
   `;
 
   // Translate button in the sidebar
   const translateButton = document.createElement("button");
   translateButton.innerText = "Translate";
   translateButton.style.cssText = `
-    display: block;
     width: 100%;
-    padding: 10px;
-    margin-top: 10px;
+    padding: 12px;
     background-color: #007bff;
     color: #fff;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
     font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s;
   `;
   
-  // Translate button hover effect
-  translateButton.onmouseover = () => (translateButton.style.backgroundColor = "#0056b3");
-  translateButton.onmouseout = () => (translateButton.style.backgroundColor = "#007bff");
+  translateButton.onmouseover = () => {
+    translateButton.style.backgroundColor = "#0056b3";
+    translateButton.style.transform = "scale(1.05)";
+  };
+  translateButton.onmouseout = () => {
+    translateButton.style.backgroundColor = "#007bff";
+    translateButton.style.transform = "scale(1)";
+  };
 
-  // Send message to background script for translation
   translateButton.onclick = () => {
     chrome.runtime.sendMessage(
       { type: "TRANSLATE_TEXT", text: inputTextBox.value, targetLang: "Chinese" },
