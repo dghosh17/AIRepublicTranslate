@@ -10,13 +10,15 @@ const showTranslationButton = () => {
     // Get the position of the selected text
     const range = window.getSelection().getRangeAt(0);
     const rect = range.getBoundingClientRect();
+
+    // Create the translation button
     const button = document.createElement("button");
     button.id = "openSidebarButton";
     button.innerText = "Translate";
     button.style.cssText = `
       position: absolute;
-      top: ${rect.top + window.scrollY}px;
-      left: ${rect.right + 10}px;
+      top: ${rect.top + window.scrollY + rect.height + 10}px; /* Button below the text */
+      left: ${rect.left + window.scrollX + 10}px; /* Button next to the text */
       padding: 8px 12px;
       background-color: #007bff;
       color: white;
@@ -31,14 +33,18 @@ const showTranslationButton = () => {
     button.onmouseover = () => button.style.backgroundColor = "#0056b3";
     button.onmouseout = () => button.style.backgroundColor = "#007bff";
     
+    // Append the button to the body
     document.body.appendChild(button);
 
     // Handle button click to show the sidebar
     button.onclick = () => {
-      const existingSidebar = document.querySelector("#translateSidebar");
-      if (existingSidebar) existingSidebar.remove(); // Remove existing sidebar
+      console.log("Translate button clicked");
 
-      // Create sidebar
+      // Remove any existing sidebar
+      const existingSidebar = document.querySelector("#translateSidebar");
+      if (existingSidebar) existingSidebar.remove(); // Remove any old sidebar
+
+      // Create the sidebar
       const sidebar = document.createElement("div");
       sidebar.id = "translateSidebar";
       sidebar.style.cssText = `
@@ -62,6 +68,7 @@ const showTranslationButton = () => {
         font-size: 22px;
         margin-bottom: 20px;
         color: #333;
+        text-align: center;
       `;
       sidebar.appendChild(header);
 
@@ -113,7 +120,7 @@ const showTranslationButton = () => {
       };
       sidebar.appendChild(translateToEnglishButton);
 
-      // Append sidebar to the body
+      // Append the sidebar to the body
       document.body.appendChild(sidebar);
     };
   }
