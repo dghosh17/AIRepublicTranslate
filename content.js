@@ -35,10 +35,8 @@ const showTranslationButton = () => {
 
     // Handle button click to show the sidebar
     button.onclick = () => {
-      console.log("Translate button clicked"); // Debugging log to check if the button works
-
       const existingSidebar = document.querySelector("#translateSidebar");
-      if (existingSidebar) existingSidebar.remove(); // Remove any existing sidebar
+      if (existingSidebar) existingSidebar.remove(); // Remove existing sidebar
 
       // Create sidebar
       const sidebar = document.createElement("div");
@@ -116,7 +114,6 @@ const showTranslationButton = () => {
       sidebar.appendChild(translateToEnglishButton);
 
       // Append sidebar to the body
-      console.log("Appending sidebar"); // Debugging log to ensure sidebar is appended
       document.body.appendChild(sidebar);
     };
   }
