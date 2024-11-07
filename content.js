@@ -10,15 +10,13 @@ const showTranslationButton = () => {
     // Get the position of the selected text
     const range = window.getSelection().getRangeAt(0);
     const rect = range.getBoundingClientRect();
-
-    // Create the translation button
     const button = document.createElement("button");
     button.id = "openSidebarButton";
     button.innerText = "Translate";
     button.style.cssText = `
       position: absolute;
-      top: ${rect.top + window.scrollY + rect.height + 10}px;
-      left: ${rect.left + window.scrollX + 10}px;
+      top: ${rect.top + window.scrollY}px;
+      left: ${rect.right + 10}px;
       padding: 8px 12px;
       background-color: #007bff;
       color: white;
@@ -33,12 +31,11 @@ const showTranslationButton = () => {
     button.onmouseover = () => button.style.backgroundColor = "#0056b3";
     button.onmouseout = () => button.style.backgroundColor = "#007bff";
 
-    // Append the button to the body
     document.body.appendChild(button);
 
     // Handle button click to show the sidebar
     button.onclick = (event) => {
-      event.stopPropagation();  // Prevent the click from closing the sidebar
+      event.stopPropagation();  // Prevent this click from closing the sidebar
 
       // Remove any existing sidebar
       const existingSidebar = document.querySelector("#translateSidebar");
@@ -61,18 +58,17 @@ const showTranslationButton = () => {
         overflow-y: auto;
       `;
 
-      // Create header with large title
+      // Create header with title
       const header = document.createElement("h2");
       header.innerText = "AI Republic Translate";
       header.style.cssText = `
         font-size: 22px;
         margin-bottom: 20px;
         color: #333;
-        text-align: center;
       `;
       sidebar.appendChild(header);
 
-      // Button styles for translation
+      // Button styles for translation options
       const buttonStyle = `
         display: block;
         width: 100%;
@@ -87,22 +83,6 @@ const showTranslationButton = () => {
         transition: background-color 0.3s ease;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
       `;
-
-      // Create Translate to English button
-      const translateToEnglishButton = document.createElement("button");
-      translateToEnglishButton.innerText = "Translate to English";
-      translateToEnglishButton.style.cssText = buttonStyle;
-      translateToEnglishButton.onmouseover = () => translateToEnglishButton.style.backgroundColor = "#0056b3";
-      translateToEnglishButton.onmouseout = () => translateToEnglishButton.style.backgroundColor = "#007bff";
-      translateToEnglishButton.onclick = () => {
-        chrome.runtime.sendMessage(
-          { type: "TRANSLATE_TEXT", text: selectedText, targetLang: "English" },
-          (response) => {
-            alert(response.translation || "No translation available.");
-          }
-        );
-      };
-      sidebar.appendChild(translateToEnglishButton);
 
       // Create Translate to Chinese button
       const translateToChineseButton = document.createElement("button");
@@ -120,7 +100,23 @@ const showTranslationButton = () => {
       };
       sidebar.appendChild(translateToChineseButton);
 
-      // Append the sidebar to the body
+      // Create Translate to English button
+      const translateToEnglishButton = document.createElement("button");
+      translateToEnglishButton.innerText = "Translate to English";
+      translateToEnglishButton.style.cssText = buttonStyle;
+      translateToEnglishButton.onmouseover = () => translateToEnglishButton.style.backgroundColor = "#0056b3";
+      translateToEnglishButton.onmouseout = () => translateToEnglishButton.style.backgroundColor = "#007bff";
+      translateToEnglishButton.onclick = () => {
+        chrome.runtime.sendMessage(
+          { type: "TRANSLATE_TEXT", text: selectedText, targetLang: "English" },
+          (response) => {
+            alert(response.translation || "No translation available.");
+          }
+        );
+      };
+      sidebar.appendChild(translateToEnglishButton);
+
+      // Append sidebar to the body
       document.body.appendChild(sidebar);
 
       // Function to close sidebar on outside click
