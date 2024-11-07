@@ -16,18 +16,26 @@ openSidebarButton.style.cssText = `
   z-index: 10001;
   transition: background-color 0.3s ease;
 `;
+
 openSidebarButton.onmouseover = () => openSidebarButton.style.backgroundColor = "#0056b3";
 openSidebarButton.onmouseout = () => openSidebarButton.style.backgroundColor = "#007bff";
 
 // Append the button to the document body
 document.body.appendChild(openSidebarButton);
 
+// Function to handle button hover
+function handleHover(button, hoverColor, originalColor) {
+  button.onmouseover = () => (button.style.backgroundColor = hoverColor);
+  button.onmouseout = () => (button.style.backgroundColor = originalColor);
+}
+
+// Create sidebar and translation buttons when the floating button is clicked
 openSidebarButton.onclick = () => {
   const selectedText = window.getSelection().toString().trim();
 
   if (selectedText) {
     const existingSidebar = document.querySelector("#translateSidebar");
-    if (existingSidebar) existingSidebar.remove();
+    if (existingSidebar) existingSidebar.remove(); // Remove any existing sidebar
 
     // Create sidebar
     const sidebar = document.createElement("div");
@@ -51,6 +59,7 @@ openSidebarButton.onclick = () => {
     header.style.cssText = `
       font-size: 24px;
       margin: 0 0 10px;
+      color: #333;
     `;
     sidebar.appendChild(header);
 
@@ -68,12 +77,6 @@ openSidebarButton.onclick = () => {
       font-size: 16px;
       transition: background-color 0.3s ease;
     `;
-
-    // Function to handle button hover
-    function handleHover(button, hoverColor, originalColor) {
-      button.onmouseover = () => (button.style.backgroundColor = hoverColor);
-      button.onmouseout = () => (button.style.backgroundColor = originalColor);
-    }
 
     // Create Translate to Chinese button
     const translateToChineseButton = document.createElement("button");

@@ -21,12 +21,20 @@
   function toggleWidget() {
     showWidget = !showWidget;
   }
+
+  // Ensuring the button is correctly positioned after the component mounts
+  onMount(() => {
+    const button = document.querySelector(".floating-button");
+    button.style.zIndex = "10001";  // Ensure it stays on top
+  });
 </script>
 
+<!-- Floating Button to Open the Widget -->
 <button class="floating-button" on:click={toggleWidget}>
   Translate
 </button>
 
+<!-- Translation Widget -->
 {#if showWidget}
 <main class="translate-widget">
   <h2>AI Republic Translate</h2>
@@ -54,6 +62,7 @@
     cursor: pointer;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     transition: background-color 0.3s ease;
+    z-index: 10001; /* Ensure it's on top */
   }
 
   .floating-button:hover {
@@ -73,6 +82,7 @@
     background-color: #f7f9fc;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    z-index: 10000;  /* Ensure it's below the button */
   }
 
   textarea {
